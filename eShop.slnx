@@ -17,8 +17,6 @@
     <Project Path="src/WebhookClient/WebhookClient.csproj" />
     <Project Path="src/Webhooks.API/Webhooks.API.csproj" />
     <Project Path="src/WebAppComponents/WebAppComponents.csproj" />
-    <Project Path="src/HybridApp/HybridApp.csproj" />
-    <Project Path="src/ClientApp/ClientApp.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Basket.UnitTests/Basket.UnitTests.csproj" />
