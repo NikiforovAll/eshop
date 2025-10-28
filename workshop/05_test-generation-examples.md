@@ -2,19 +2,40 @@
 
 **Context**: These prompts demonstrate how to leverage Claude Code for comprehensive test suite generation. Focus on having AI identify test cases, discover edge cases, generate test data, and create proper assertions automatically.
 
-**Category**: Test Generation & Quality Assurance
-**Approach**: AI discovers what to test, generates test data, creates complete test suites
+## Effectiveness Tips
 
----
+**Let AI Discover Test Cases:**
+- Don't specify every test - ask Claude to analyze code and suggest scenarios
+- Request edge case identification based on code analysis
+- Let AI generate realistic test data appropriate for business domain
 
-## AI-Assisted Test Generation Philosophy
+**Comprehensive Coverage:**
+- Ask for "comprehensive test suite" not individual tests
+- Request tests for: happy path, edge cases, error scenarios, concurrency
+- Include: validation, state transitions, integration points, performance
 
-Instead of specifying every test case, let Claude Code:
-- **Analyze code** to identify testable scenarios and edge cases
-- **Generate test data** that covers boundary conditions
-- **Create assertions** based on expected behavior
-- **Suggest additional tests** you might not have considered
-- **Integrate with existing test infrastructure** automatically
+**Test Data Generation:**
+- Request "realistic test data" - AI will generate domain-appropriate values
+- Ask for boundary values, invalid inputs, edge cases automatically
+- Let AI create diverse scenarios (empty, single, many, max values)
+
+**Integration with Existing Code:**
+- Always reference existing test files to follow patterns
+- Request use of existing fixtures (CatalogApiFixture, test helpers)
+- Ask AI to match coding style and assertion patterns
+
+**Iterative Approach:**
+- Start with "suggest test scenarios" before implementation
+- Review suggestions, add missing scenarios
+- Then request full implementation
+- This ensures nothing is missed
+
+**What Makes These Prompts Effective:**
+1. **Analysis-first approach** - AI examines code to discover what to test
+2. **Edge case discovery** - AI identifies scenarios you might miss
+3. **Realistic test data** - AI generates appropriate values for domain
+4. **Complete coverage** - Asks for comprehensive suites, not single tests
+5. **Pattern matching** - AI follows existing test conventions automatically
 
 ---
 
@@ -75,77 +96,9 @@ Generate a comprehensive test suite for the Catalog API endpoints in tests\Catal
 
 Suggest test scenarios first, then implement.
 ```
-
 ---
 
-## Prompt 3: Event Handler Test Suite with Scenarios
-
-```
-Create a complete test suite for OrderStatusChangedToPaidIntegrationEventHandler in src\Catalog.API\IntegrationEvents\EventHandling\.
-
-**Your task:**
-1. Analyze the handler logic (inventory reduction, low stock alerts)
-2. Identify scenarios to test:
-   - Successful stock reduction for multiple items
-   - Insufficient stock scenarios
-   - Product not found scenarios
-   - Low stock alert triggering (AvailableStock <= RestockThreshold)
-   - OnReorder flag preventing duplicate alerts
-   - Multiple order items affecting same product
-3. Generate test data:
-   - Integration events with various order items
-   - CatalogItem entities with different stock levels
-   - Products at/below/above RestockThreshold
-4. Mock dependencies: CatalogContext, ICatalogIntegrationEventService, ILogger
-5. Verify behavior: stock decremented, events published, exceptions handled
-
-**Test categories:**
-- Happy path: stock reduced successfully
-- Edge cases: stock at threshold, below threshold, zero stock
-- Error handling: product not found, insufficient stock
-- Business logic: OnReorder flag, low stock event publishing
-- Concurrency: multiple events for same product
-
-Generate the test suite with realistic scenarios and proper mocking.
-```
----
-
-## Prompt 6: Validation Logic Test Suite
-
-```
-Generate comprehensive tests for AddressValidationService (if it exists) or create tests for address validation in CreateOrderCommandHandler.
-
-**Your task:**
-1. Analyze validation rules in the code
-2. Identify validation scenarios:
-   - All fields valid
-   - Missing required fields (street, city, zipcode, country, state)
-   - Invalid formats (zipcode patterns, empty strings, whitespace)
-   - Boundary lengths (min/max string lengths)
-   - Special characters, unicode, SQL injection attempts
-3. Generate test data covering:
-   - Valid addresses (US, international)
-   - Invalid addresses for each validation rule
-   - Edge cases (single character, max length, emoji, null bytes)
-4. Create meaningful test names describing what's being validated
-5. Verify:
-   - Validation passes for valid data
-   - Validation fails with correct error messages
-   - Multiple validation errors collected
-   - Specific error messages for each rule
-
-**Test structure:**
-- ValidAddress_PassesValidation
-- MissingStreet_FailsValidation
-- InvalidZipCodeFormat_FailsValidation
-- [Edge case tests based on code analysis]
-
-Generate complete validation test suite with diverse test data.
-```
-
----
-
-## Prompt 7: Integration Test Suite for Complete Flow
+## Prompt 3: Integration Test for Complete Flow
 
 ```
 Create integration tests for the complete order creation flow from Blazor UI to database.
@@ -181,7 +134,7 @@ Generate end-to-end integration test suite.
 
 ---
 
-## Prompt 8: Mutation Testing - Generate Missing Tests
+## Prompt 4: Mutation Testing - Generate Missing Tests
 
 ```
 Analyze test coverage for CatalogItem.cs and generate tests for uncovered scenarios.
@@ -213,7 +166,7 @@ Suggest missing test scenarios, then implement them.
 
 ---
 
-## Prompt 9: Property-Based Testing for Business Rules
+## Prompt 5: Property-Based Testing for Business Rules
 
 ```
 Create property-based tests for Order aggregate business rules.
@@ -246,7 +199,7 @@ Generate property-based test suite for critical business rules.
 
 ---
 
-## Prompt 10: Performance Test Suite with Benchmarks
+## Prompt 6: Performance Test Suite with Benchmarks
 
 ```
 Create performance tests for Catalog API query operations.
@@ -281,39 +234,3 @@ Create performance tests for Catalog API query operations.
 Generate performance test suite with realistic scenarios.
 ```
 
----
-
-## Effectiveness Tips
-
-**Let AI Discover Test Cases:**
-- Don't specify every test - ask Claude to analyze code and suggest scenarios
-- Request edge case identification based on code analysis
-- Let AI generate realistic test data appropriate for business domain
-
-**Comprehensive Coverage:**
-- Ask for "comprehensive test suite" not individual tests
-- Request tests for: happy path, edge cases, error scenarios, concurrency
-- Include: validation, state transitions, integration points, performance
-
-**Test Data Generation:**
-- Request "realistic test data" - AI will generate domain-appropriate values
-- Ask for boundary values, invalid inputs, edge cases automatically
-- Let AI create diverse scenarios (empty, single, many, max values)
-
-**Integration with Existing Code:**
-- Always reference existing test files to follow patterns
-- Request use of existing fixtures (CatalogApiFixture, test helpers)
-- Ask AI to match coding style and assertion patterns
-
-**Iterative Approach:**
-- Start with "suggest test scenarios" before implementation
-- Review suggestions, add missing scenarios
-- Then request full implementation
-- This ensures nothing is missed
-
-**What Makes These Prompts Effective:**
-1. **Analysis-first approach** - AI examines code to discover what to test
-2. **Edge case discovery** - AI identifies scenarios you might miss
-3. **Realistic test data** - AI generates appropriate values for domain
-4. **Complete coverage** - Asks for comprehensive suites, not single tests
-5. **Pattern matching** - AI follows existing test conventions automatically
