@@ -4,16 +4,10 @@ on:
     branches: [ main ]
     paths-ignore:
       - '**.md'
-      - 'src/ClientApp/**'
-      - 'tests/ClientApp.UnitTests/**'
-      - '.github/workflows/pr-validation-maui.yml'
   pull_request:
     branches: [ main ]
     paths-ignore:
       - '**.md'
-      - 'src/ClientApp/**'
-      - 'test/ClientApp.UnitTests/**'
-      - '.github/workflows/pr-validation-maui.yml'
 jobs:
   test:
     timeout-minutes: 60

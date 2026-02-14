@@ -166,16 +166,3 @@ properties:
       settings:
         name: ms-dotnettools.csdevkit
         exist: true
-    ### Install .NET MAUI Extension
-    ### -------------------------------------
-    - resource: Microsoft.VSCode.Dsc/VSCodeExtension
-      id: dotnet-maui-extension
-      dependsOn:
-        - vscode
-        - docker
-      directives:
-        description: Install .NET MAUI extension
-        allowPrerelease: true
-      settings:
-        name: ms-dotnettools.dotnet-maui
-        exist: true
