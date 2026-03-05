@@ -48,7 +48,7 @@
 
                 <form method="post" @formname="toggle-like" @onsubmit="@ToggleLikeAsync" data-enhance="@isLoggedIn">
                     <AntiforgeryToken />
-                    <button type="submit" class="like-button @(isLiked ? "liked" : "")" title="@(isLiked ? "Unlike" : "Like")">
+                    <button type="submit" class="like-button @(isLiked ? "liked" : "")" title="@(isLiked ? "Unlike" : "Like")" data-testid="like-button">
                         <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             @if (isLiked)
                             {
