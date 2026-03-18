@@ -581,6 +581,105 @@
         }
       }
     },
+    "/api/catalog/items/{id}/likes": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Get like count for a catalog item",
+        "description": "Get the total number of likes and whether the current user has liked the item",
+        "operationId": "GetItemLikes",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The catalog item id",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "The API version, in the format 'major.minor'.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2.0"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogItemLikeResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/catalog/items/{id}/like": {
+      "put": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Toggle like on a catalog item",
+        "description": "Like or unlike the specified catalog item",
+        "operationId": "ToggleItemLike",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The catalog item id",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "The API version, in the format 'major.minor'.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2.0"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogItemLikeResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          { }
+        ]
+      }
+    },
     "/api/catalog/items/withsemanticrelevance": {
       "get": {
         "tags": [
@@ -787,6 +886,26 @@
           }
         }
       },
+      "CatalogItemLikeResult": {
+        "required": [
+          "count",
+          "isLiked"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isLiked": {
+            "type": "boolean"
+          }
+        }
+      },
       "CatalogType": {
         "required": [
           "type"
@@ -882,6 +1001,20 @@
               "null",
               "string"
             ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://localhost:5223/connect/authorize",
+            "tokenUrl": "http://localhost:5223/connect/token",
+            "scopes": {
+              "catalog": "Catalog API"
+            }
           }
         }
       }

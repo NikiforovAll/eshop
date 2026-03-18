@@ -109,6 +109,19 @@ public static class CatalogApi
             .WithSummary("Delete catalog item")
             .WithDescription("Delete the specified catalog item");
 
+        // Routes for likes
+        api.MapGet("/items/{id:int}/likes", GetItemLikes)
+            .WithName("GetItemLikes")
+            .WithSummary("Get like count for a catalog item")
+            .WithDescription("Get the total number of likes and whether the current user has liked the item")
+            .WithTags("Items");
+        api.MapPut("/items/{id:int}/like", ToggleItemLike)
+            .WithName("ToggleItemLike")
+            .WithSummary("Toggle like on a catalog item")
+            .WithDescription("Like or unlike the specified catalog item")
+            .WithTags("Items")
+            .RequireAuthorization();
+
         return app;
     }
 
@@ -401,6 +414,63 @@ public static class CatalogApi
         services.Context.CatalogItems.Remove(item);
         await services.Context.SaveChangesAsync();
         return TypedResults.NoContent();
+    }
+
+    public static async Task<Ok<CatalogItemLikeResult>> GetItemLikes(
+        HttpContext httpContext,
+        [AsParameters] CatalogServices services,
+        [Description("The catalog item id")] int id)
+    {
+        var cacheKey = $"likes_count_{id}";
+        var cacheDuration = services.Options.Value.LikeCacheDurationSeconds;
+
+        if (!services.Cache.TryGetValue(cacheKey, out int count))
+        {
+            count = await services.Context.CatalogItemLikes.CountAsync(l => l.CatalogItemId == id);
+            services.Cache.Set(cacheKey, count, TimeSpan.FromSeconds(cacheDuration));
+        }
+
+        var userId = httpContext.User.FindFirst("sub")?.Value;
+        var isLiked = userId is not null &&
+            await services.Context.CatalogItemLikes.AnyAsync(l => l.CatalogItemId == id && l.UserId == userId);
+
+        return TypedResults.Ok(new CatalogItemLikeResult(count, isLiked));
+    }
+
+    public static async Task<Ok<CatalogItemLikeResult>> ToggleItemLike(
+        HttpContext httpContext,
+        [AsParameters] CatalogServices services,
+        [Description("The catalog item id")] int id)
+    {
+        var userId = httpContext.User.FindFirst("sub")!.Value;
+        var cacheKey = $"likes_count_{id}";
+
+        var existing = await services.Context.CatalogItemLikes
+            .FirstOrDefaultAsync(l => l.CatalogItemId == id && l.UserId == userId);
+
+        bool isLiked;
+        if (existing is not null)
+        {
+            services.Context.CatalogItemLikes.Remove(existing);
+            isLiked = false;
+        }
+        else
+        {
+            services.Context.CatalogItemLikes.Add(new CatalogItemLike
+            {
+                CatalogItemId = id,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            });
+            isLiked = true;
+        }
+
+        await services.Context.SaveChangesAsync();
+
+        var count = await services.Context.CatalogItemLikes.CountAsync(l => l.CatalogItemId == id);
+        services.Cache.Set(cacheKey, count, TimeSpan.FromSeconds(services.Options.Value.LikeCacheDurationSeconds));
+
+        return TypedResults.Ok(new CatalogItemLikeResult(count, isLiked));
     }
 
     private static string GetImageMimeTypeFromImageFileExtension(string extension) => extension switch

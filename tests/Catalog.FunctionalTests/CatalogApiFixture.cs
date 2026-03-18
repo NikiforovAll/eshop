@@ -31,9 +31,27 @@ public sealed class CatalogApiFixture : WebApplicationFactory<Program>, IAsyncLi
             config.AddInMemoryCollection(new Dictionary<string, string>
             {
                 { $"ConnectionStrings:{Postgres.Resource.Name}", _postgresConnectionString },
-                });
+                { "Identity:Url", "http://localhost" },
+                { "Identity:Audience", "catalog" },
+            });
+        });
+        builder.ConfigureServices(services =>
+        {
+            services.AddSingleton<IStartupFilter>(new AutoAuthorizeStartupFilter());
         });
         return base.CreateHost(builder);
+    }
+
+    private class AutoAuthorizeStartupFilter : IStartupFilter
+    {
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
+        {
+            return builder =>
+            {
+                builder.UseMiddleware<AutoAuthorizeMiddleware>();
+                next(builder);
+            };
+        }
     }
 
     public new async Task DisposeAsync()

@@ -19,6 +19,12 @@ img {
     max-width: 30rem;
 }
 
+.cart-like-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .add-to-cart {
     display: flex;
     align-items: center;
@@ -49,6 +55,29 @@ img {
     .add-to-cart button:active {
         background-color: #333;
     }
+
+.like-button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 1.5px solid #ccc;
+    border-radius: .25rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.like-button:hover {
+    border-color: #e53935;
+    color: #e53935;
+}
+
+.like-button.liked {
+    border-color: #e53935;
+    color: #e53935;
+}
 
 a {
     color: black;

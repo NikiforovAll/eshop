@@ -49,6 +49,20 @@ public class CatalogService(HttpClient httpClient) : ICatalogService
         return result!;
     }
 
+    public Task<CatalogItemLikeResponse> GetItemLikes(int itemId)
+    {
+        var uri = $"{remoteServiceBaseUrl}items/{itemId}/likes";
+        return httpClient.GetFromJsonAsync<CatalogItemLikeResponse>(uri)!;
+    }
+
+    public async Task<CatalogItemLikeResponse> ToggleItemLike(int itemId)
+    {
+        var uri = $"{remoteServiceBaseUrl}items/{itemId}/like";
+        var response = await httpClient.PutAsync(uri, null);
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<CatalogItemLikeResponse>())!;
+    }
+
     private static string GetAllCatalogItemsUri(string baseUri, int pageIndex, int pageSize, int? brand, int? type)
     {
         string filterQs = string.Empty;

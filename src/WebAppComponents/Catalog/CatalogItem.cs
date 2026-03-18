@@ -14,3 +14,4 @@ public record CatalogItem(
 public record CatalogResult(int PageIndex, int PageSize, int Count, List<CatalogItem> Data);
 public record CatalogBrand(int Id, string Brand);
 public record CatalogItemType(int Id, string Type);
+public record CatalogItemLikeResponse(int Count, bool IsLiked);
