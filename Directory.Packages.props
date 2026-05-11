@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AspnetVersion>10.0.0</AspnetVersion>
-    <MicrosoftExtensionsVersion>10.1.0</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>10.5.0</MicrosoftExtensionsVersion>
     <AspireVersion>13.1.0</AspireVersion>
     <AspireUnstablePackagesVersion>13.1.0-preview.1.25616.3</AspireUnstablePackagesVersion>
     <GrpcVersion>2.71.0</GrpcVersion>
